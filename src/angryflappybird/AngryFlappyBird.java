@@ -163,7 +163,7 @@ public class AngryFlappyBird extends Application {
     	 // step1: update floor
     	 private void moveFloor() {
     		
-    		for(int i=0; i<DEF.FLOOR_COUNT; i++) {
+    		for (int i=0; i<DEF.FLOOR_COUNT; i++) {
     			if (floors.get(i).getPositionX() <= -DEF.FLOOR_WIDTH) {
     				double nextX = floors.get((i+1)%DEF.FLOOR_COUNT).getPositionX() + DEF.FLOOR_WIDTH;
     	        	double nextY = DEF.SCENE_HEIGHT - DEF.FLOOR_HEIGHT;
