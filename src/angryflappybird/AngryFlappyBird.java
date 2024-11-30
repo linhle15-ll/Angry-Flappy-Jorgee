@@ -32,9 +32,14 @@ public class AngryFlappyBird extends Application {
     private long clickTime, startTime, elapsedTime;   
     private AnimationTimer timer;
     
-    // game components
+    // game components - Linh Ngoc Le
     private Sprite blob;
     private ArrayList<Sprite> floors;
+    private Sprite upperPipe;
+    private Sprite lowerPipe;
+    private Sprite rainbowCandy;
+    private Sprite normalCandy;
+    private Sprite dragon;
     
     // game flags
     private boolean CLICKED, GAME_START, GAME_OVER;
@@ -45,6 +50,9 @@ public class AngryFlappyBird extends Application {
     private GraphicsContext gc;		
     
 	// the mandatory main method 
+    /**
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }
@@ -72,13 +80,17 @@ public class AngryFlappyBird extends Application {
         primaryStage.show();
     }
     
-    // the getContent method sets the Scene layer
+    // the getContent method sets the Scene layer - Linh Ngoc Le
+//    Set the gameControl UI (left side of the gameScene)
     private void resetGameControl() {
         
         DEF.startButton.setOnMouseClicked(this::mouseClickHandler);
         
-        gameControl = new VBox();
+        gameControl = new VBox(10);
+        gameControl.setPadding(new Insets(10));
         gameControl.getChildren().addAll(DEF.startButton);
+        gameControl.getChildren().addAll(DEF.levelSelection);
+        gameControl.getChildren().addAll(DEF.instruction);
     }
     
     private void mouseClickHandler(MouseEvent e) {
@@ -106,11 +118,11 @@ public class AngryFlappyBird extends Application {
             gc = canvas.getGraphicsContext2D();
 
             // create a background
-            ImageView background = DEF.IMVIEW.get("background");
+            ImageView dayBackground = DEF.IMVIEW.get("day_background");
             
             // create the game scene
             gameScene = new Group();
-            gameScene.getChildren().addAll(background, canvas);
+            gameScene.getChildren().addAll(dayBackground, canvas);
     	}
     	
     	// initialize floor
@@ -129,6 +141,14 @@ public class AngryFlappyBird extends Application {
         // initialize blob
         blob = new Sprite(DEF.BLOB_POS_X, DEF.BLOB_POS_Y,DEF.IMAGE.get("blob0"));
         blob.render(gc);
+        
+        // initialize pipes - Linh Ngoc Le
+        lowerPipe = new Sprite(DEF.LOWER_PIPE_POS_X, DEF.LOWER_PIPE_POS_Y, DEF.IMAGE.get("lower_pipe")); 
+        upperPipe = new Sprite(DEF.UPPER_PIPE_POS_X, DEF.UPPER_PIPE_POS_Y, DEF.IMAGE.get("upper_pipe"));
+        
+        // pipes are rendered at the start
+        upperPipe.render(gc);
+        lowerPipe.render(gc);
         
         // initialize timer
         startTime = System.nanoTime();
@@ -156,6 +176,10 @@ public class AngryFlappyBird extends Application {
     	    	 
     	    	 // step2: update blob
     	    	 moveBlob();
+    	    	 
+    	    	 // step3: update pipes - Linh Ngoc Le
+                 movePipes();
+                 
     	    	 checkCollision();
     	     }
     	 }
@@ -198,6 +222,17 @@ public class AngryFlappyBird extends Application {
 			blob.render(gc);
     	 }
     	 
+    	 // Step3: Move pipes
+    	 private void movePipes() {
+    	     upperPipe.setVelocity(-DEF.PIPE_VEL_EASY, 0);
+    	     lowerPipe.setVelocity(-DEF.PIPE_VEL_EASY, 0);
+    	     
+    	     upperPipe.update(DEF.SCENE_SHIFT_TIME);
+    	     lowerPipe.update(DEF.SCENE_SHIFT_TIME);
+    	     
+    	     upperPipe.render(gc);
+    	     lowerPipe.render(gc);
+    	 }
     	 public void checkCollision() {
     		 
     		// check collision  
