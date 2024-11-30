@@ -42,32 +42,36 @@ public class Defines {
     final int FLOOR_COUNT = 2;
     
     // coefficients related to the pipes - Linh Ngoc Le
-    final int PIPE_WIDTH = 70;
-    final int UPPER_PIPE_HEIGHT = 210; //*********************************
-    final int LOWER_PIPE_HEIGHT = 210;
-    final int PIPE_HEIGHT = 210; 
-    final int PIPE_MIN_HEIGHT = 100;
     final int PIPES_GAP = BLOB_HEIGHT + 6;
+    final int PIPE_WIDTH = 70;
+    final int PIPE_HEIGHT = 150; 
+    final int PIPE_MIN_HEIGHT = 100;
     final int PIPE_MAX_HEIGHT = PIPE_HEIGHT - PIPES_GAP - PIPE_MIN_HEIGHT;
-    final int PIPE_COUNT = 2;
+     
+    final int LOWER_PIPE_POS_X = 70;
+    final int UPPER_PIPE_POS_X = 70;
+    
+    final int LOWER_PIPE_POS_Y = 70;
+    final int UPPER_PIPE_POS_Y = 70;
+    
+    final int PIPES_COUNT = 2;
     
     // velocity at which pipes move - Linh Ngoc Le
     final int PIPE_VEL_EASY = 5;
     final int PIPE_VEL_MEDIUM = 10;
     final int PIPE_VEL_HARD = 20;
-    
                                
     // coefficients related to raibow candy - Linh Ngoc Le
-    final int RAINBOW_CANDY_WIDTH = 70;
-    final int RAINBOW_CANDY_HEIGHT = 70;
+    final int RAINBOW_CANDY_WIDTH = 60;
+    final int RAINBOW_CANDY_HEIGHT = 60;
     
     // coefficients related to normal candy - Linh Ngoc Le
-    final int NORMAL_CANDY_WIDTH = 70;
-    final int NORMAL_CANDY_HEIGHT = 70;
+    final int NORMAL_CANDY_WIDTH = 60;
+    final int NORMAL_CANDY_HEIGHT = 60;
     
     // coefficients related to dragon - Linh Ngoc Le
-    final int DRAGON_HEIGHT = 70;
-    final int DRAGON_WIDTH = 70;
+    final int DRAGON_HEIGHT = 60;
+    final int DRAGON_WIDTH = 60;
     
     // coefficients related to time
     final int SCENE_SHIFT_TIME = 5;
@@ -96,20 +100,20 @@ public class Defines {
 		// initialize images
 		for(int i=0; i<IMAGE_FILES.length; i++) {
 			Image img;
-			if (i == 6) {
-				img = new Image(pathImage(IMAGE_FILES[i]), FLOOR_WIDTH, FLOOR_HEIGHT, false, false);
-			}
+			if (i == 0 | i == 1) {
+                img = new Image(pathImage(IMAGE_FILES[i]), SCENE_WIDTH, SCENE_HEIGHT, false, false);
+            }
 			else if (i == 2 || i == 3 || i == 4 || i == 5){
 				img = new Image(pathImage(IMAGE_FILES[i]), BLOB_WIDTH, BLOB_HEIGHT, false, false);
 			}
-			else if (i == 0 | i == 1) {
-				img = new Image(pathImage(IMAGE_FILES[i]), SCENE_WIDTH, SCENE_HEIGHT, false, false);
-			}
+			else if (i == 6) {
+                img = new Image(pathImage(IMAGE_FILES[i]), FLOOR_WIDTH, FLOOR_HEIGHT, false, false);
+            }
 			else if (i == 7) {
-			    img = new Image(pathImage(IMAGE_FILES[i]), PIPE_WIDTH, LOWER_PIPE_HEIGHT, false, false);
+			    img = new Image(pathImage(IMAGE_FILES[i]), PIPE_WIDTH, PIPE_HEIGHT, false, false);
 			}
 			else if (i == 8) {
-			    img = new Image(pathImage(IMAGE_FILES[i]), PIPE_WIDTH, UPPER_PIPE_HEIGHT, false, false);
+			    img = new Image(pathImage(IMAGE_FILES[i]), PIPE_WIDTH, PIPE_HEIGHT, false, false);
             }
 			else if (i == 9) {
 			    img = new Image(pathImage(IMAGE_FILES[i]), RAINBOW_CANDY_WIDTH, RAINBOW_CANDY_HEIGHT, false, false);
@@ -118,7 +122,7 @@ public class Defines {
 			    img = new Image(pathImage(IMAGE_FILES[i]), NORMAL_CANDY_WIDTH, NORMAL_CANDY_HEIGHT, false, false);
 			}
 			else {
-			    img = new Image(pathImage(IMAGE_FILES[i], DRAGON_WIDTH, DRAGON_HEIGHT, false, false));
+			    img = new Image(pathImage(IMAGE_FILES[i]), DRAGON_WIDTH, DRAGON_HEIGHT, false, false);
 			}
     		IMAGE.put(IMAGE_FILES[i],img);
     	}
@@ -136,21 +140,21 @@ public class Defines {
 		);
 		
         // Instruction - Linh Ngoc Le
-		instruction = new VBox(!0);
+		instruction = new VBox(10);
 //		row 1: Bonus point (normal candy)
 		VBox row1 = new VBox(10);
 		Label labelBonusPoints = new Label("Bonus points");
-		row1.getChildren().addAll(IMVIEW.get(IMAGE_FILES[9]), labelBonusPoints);
+		row1.getChildren().addAll(IMVIEW.get(IMAGE_FILES[10]), labelBonusPoints);
 		
 //		row 2: Snooze (rainbow candy)
 		VBox row2 = new VBox(10);
         Label labelSnooze = new Label("Let you snooze");
-        row2.getChildren().addAll(IMVIEW.get(IMAGE_FILES[8]), labelSnooze);
+        row2.getChildren().addAll(IMVIEW.get(IMAGE_FILES[9]), labelSnooze);
 		
 //      row3: Avoid dragons
         VBox row3 = new VBox(10);
         Label labelDragon = new Label("Avoid dragons");
-        row3.getChildren().addAll(IMVIEW.get(IMAGE_FILES[10]),labelDragon);
+        row3.getChildren().addAll(IMVIEW.get(IMAGE_FILES[11]),labelDragon);
 		
         instruction.getChildren().addAll(row1, row2, row3);
 	}
@@ -176,4 +180,26 @@ public class Defines {
     }
 	
 //	COEFFICIENTS FOR DIFFERENT LEVELS 
+	/**
+     * Reset sprites coefficients for levels
+     * @param 
+     * @param 
+     * @return resized image
+     */
+	public static void easyLevel() {
+	    System.out.println("Set the easy level.");
+	}
+	
+	/**
+	 * 
+	 */
+	public static void mediumLevel() {
+	    System.out.println("Set the medium level.");
+	}
+	
+	/**
+	 * 
+	 */
+	public static void hardLevel() {
+	    System.out.println("Set the hard level.");	}
 }
