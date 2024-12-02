@@ -25,16 +25,17 @@ public class Defines {
     final int SCENE_HEIGHT = 570;
     final int SCENE_WIDTH = 400;
 
-    // coefficients related to the blob
-    final int BLOB_WIDTH = 90;
-    final int BLOB_HEIGHT = 90;
-    final int BLOB_POS_X = 70;
-    final int BLOB_POS_Y = 200;
-    final int BLOB_DROP_TIME = 300000000;  	// the elapsed time threshold before the blob starts dropping
-    final int BLOB_DROP_VEL = 300;    		// the blob drop velocity
-    final int BLOB_FLY_VEL = -40;
-    final int BLOB_IMG_LEN = 4;
-    final int BLOB_IMG_PERIOD = 5;
+    // coefficients related to the goose
+    
+    final int GOOSE_WIDTH = 90;
+    final int GOOSE_HEIGHT = 90;
+    final int GOOSE_POS_X = 70;
+    final int GOOSE_POS_Y = 200;
+    final int GOOSE_DROP_TIME = 300000000;  	// the elapsed time threshold before the goose starts dropping
+    final int GOOSE_DROP_VEL = 300;    		// the goose drop velocity
+    final int GOOSE_FLY_VEL = -40;
+    final int GOOSE_IMG_LEN = 4;
+    final int GOOSE_IMG_PERIOD = 5;
     
     // coefficients related to the floors
     final int FLOOR_WIDTH = 400;
@@ -42,7 +43,7 @@ public class Defines {
     final int FLOOR_COUNT = 2;
     
     // coefficients related to the pipes - Linh Ngoc Le
-    final int PIPES_GAP = BLOB_HEIGHT + 6;
+    final int PIPES_GAP = GOOSE_HEIGHT + 6;
     final int PIPE_WIDTH = 70;
     final int PIPE_HEIGHT = 150; 
     final int PIPE_MIN_HEIGHT = 100;
@@ -84,7 +85,7 @@ public class Defines {
     // coefficients related to media display
     final String STAGE_TITLE = "Angry Flappy Bird - George Version";
 	private final String IMAGE_DIR = "../resources/images/";
-    final String[] IMAGE_FILES = {"day_background", "night_background", "blob0", "blob1", "blob2", "blob3", "floor", "lower_pipe", "upper_pipe", "rainbow_candy", "normal_candy", "dragon"}; // More sprite here 
+    final String[] IMAGE_FILES = {"day_background", "night_background", "goose0", "goose1", "goose2", "goose3", "floor", "lower_pipe", "upper_pipe", "rainbow_candy", "normal_candy", "dragon"}; // More sprite here 
 
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();
@@ -104,7 +105,7 @@ public class Defines {
                 img = new Image(pathImage(IMAGE_FILES[i]), SCENE_WIDTH, SCENE_HEIGHT, false, false);
             }
 			else if (i == 2 || i == 3 || i == 4 || i == 5){
-				img = new Image(pathImage(IMAGE_FILES[i]), BLOB_WIDTH, BLOB_HEIGHT, false, false);
+				img = new Image(pathImage(IMAGE_FILES[i]), GOOSE_WIDTH, GOOSE_HEIGHT, false, false);
 			}
 			else if (i == 6) {
                 img = new Image(pathImage(IMAGE_FILES[i]), FLOOR_WIDTH, FLOOR_HEIGHT, false, false);
