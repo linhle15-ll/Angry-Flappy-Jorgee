@@ -17,6 +17,7 @@ public class Sprite {
     private double width;
     private double height;
     private String IMAGE_DIR = "../resources/images/";
+//     private String IMAGE_DIR = "/angryflappybird-lmao/src/images/";
 
     /**
      * 
@@ -59,52 +60,99 @@ public class Sprite {
     }
 
     /**
-     * @return
+     * @return positionX: position at x-axis of an object
      */
     public double getPositionX() {
         return positionX;
     }
 
+    /**
+     * @return positionY: position at y-axis of an object
+     */
     public double getPositionY() {
         return positionY;
     }
-
+    
+    /**
+     * @param velocityX
+     * @param velocityY
+     */
     public void setVelocity(double velocityX, double velocityY) {
         this.velocityX = velocityX;
         this.velocityY = velocityY;
     }
 
+    /**
+     * @param x
+     * @param y
+     */
     public void addVelocity(double x, double y) {
         this.velocityX += x;
         this.velocityY += y;
     }
 
+    /**
+     * @return
+     */
     public double getVelocityX() {
         return velocityX;
     }
 
+    /**
+     * @return
+     */
     public double getVelocityY() {
         return velocityY;
     }
 
+    /**
+     * @return
+     */
     public double getWidth() {
         return width;
     }
 
+    /**
+     * @param gc
+     */
     public void render(GraphicsContext gc) {
         gc.drawImage(image, positionX, positionY);
     }
 
+    /**
+     * @return
+     */
     public Rectangle2D getBoundary() {
         return new Rectangle2D(positionX, positionY, width, height);
     }
 
+    /**
+     * @param s
+     * @return
+     */
     public boolean intersectsSprite(Sprite s) {
         return s.getBoundary().intersects(this.getBoundary());
     }
 
+    /**
+     * @param time
+     */
     public void update(double time) {
         positionX += velocityX * time;
         positionY += velocityY * time;
+    }
+
+    /**
+     * @return
+     */
+    public String getIMAGE_DIR() {
+        return IMAGE_DIR;
+    }
+
+    /**
+     * @param iMAGE_DIR
+     */
+    public void setIMAGE_DIR(String iMAGE_DIR) {
+        IMAGE_DIR = iMAGE_DIR;
     }
 }

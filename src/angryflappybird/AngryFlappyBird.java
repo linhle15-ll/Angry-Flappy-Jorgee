@@ -37,11 +37,10 @@ public class AngryFlappyBird extends Application {
     
     // game components - Linh Ngoc Le
     private Goose goose;
-    private ArrayList<Sprite> floors;
-    private ArrayList<Sprite> pipes;
-    private ArrayList<Sprite> candies;
-    private ArrayList<Sprite> eggs;
-    private ArrayList<Sprite> dragons;
+    private ArrayList<Floor> floors;
+    private ArrayList<Pipe> pipes;
+    private ArrayList<Candy> candies;
+    private ArrayList<Dragon> dragons;
     
     // Score texts
     private Text scoreText;
@@ -117,7 +116,7 @@ public class AngryFlappyBird extends Application {
      * @return randomHeight: random height value
      * @author: Linh Ngoc Le
      */
-    private int generateRandomHeight(int maxH, int minH) {
+    public int generateRandomHeight(int maxH, int minH) {
         int randomHeight = (int)(Math.random() * (maxH - minH + 1));
         return randomHeight;
     }
@@ -153,8 +152,7 @@ public class AngryFlappyBird extends Application {
     		
     		int posX = i * DEF.FLOOR_WIDTH;
     		int posY = DEF.SCENE_HEIGHT - DEF.FLOOR_HEIGHT;
-    		
-    		Sprite floor = new Sprite(posX, posY, DEF.IMAGE.get("floor"));
+    		Floor floor = new Floor(posX, posY, DEF.IMAGE.get("floor"));
     		floor.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
     		floor.render(gc);
     		
@@ -162,12 +160,22 @@ public class AngryFlappyBird extends Application {
     	}
         
         // initialize goose
-        goose = new Goose(DEF.GOOSE_POS_X, DEF.GOOSE_POS_Y,DEF.IMAGE.get("blob0"));
+        goose = new Goose(DEF.GOOSE_POS_X, DEF.GOOSE_POS_Y,DEF.IMAGE.get("goose0"));
         goose.render(gc);
         
         // initialize pipes - Linh Ngoc Le
-        Pipe lowerPipe = new Pipe(400, DEF.SCENE_HEIGHT -  generateRandomHeight(DEF.PIPE_MAX_HEIGHT, DEF.PIPE_MAX_HEIGHT), DEF.IMAGE.get("lower_pipe")); 
-        Pipe upperPipe = new Pipe(400, generateRandomHeight(0, -50), DEF.IMAGE.get("upper_pipe"));
+        initializePipes();
+        
+        // initialize timer
+        startTime = System.nanoTime();
+//      backgroundTime = 0;
+        timer = new MyTimer();
+        timer.start();
+    }
+
+    private void initializePipes() {
+        Pipe lowerPipe = new Pipe(100, DEF.SCENE_HEIGHT -  generateRandomHeight(DEF.PIPE_MAX_HEIGHT, DEF.PIPE_MIN_HEIGHT), DEF.IMAGE.get("lower_pipe")); 
+        Pipe upperPipe = new Pipe(100, generateRandomHeight(0, -50), DEF.IMAGE.get("upper_pipe"));
        
         lowerPipe.setVelocity(DEF.PIPE_VEL_EASY, 0);
         upperPipe.setVelocity(DEF.PIPE_VEL_EASY, 0);
@@ -175,13 +183,9 @@ public class AngryFlappyBird extends Application {
         pipes.add(upperPipe);
         pipes.add(lowerPipe);
         
-        // pipes are rendered at the start        upperPipe.render(gc);
+        // pipes are rendered at the start upperPipe.render(gc);
         lowerPipe.render(gc);
-        
-        // initialize timer
-        startTime = System.nanoTime();
-        timer = new MyTimer();
-        timer.start();
+        upperPipe.render(gc);
     }
 
     //timer stuff
@@ -208,14 +212,13 @@ public class AngryFlappyBird extends Application {
     	    	 
     	    	 // step3: update pipes - Linh Ngoc Le
                  movePipes();
-                 
+                               
     	    	 checkCollision();
     	     }
     	 }
     	 
     	 // step1: update floor
     	 private void moveFloor() {
-    		
     		for (int i=0; i<DEF.FLOOR_COUNT; i++) {
     			if (floors.get(i).getPositionX() <= -DEF.FLOOR_WIDTH) {
     				double nextX = floors.get((i+1)%DEF.FLOOR_COUNT).getPositionX() + DEF.FLOOR_WIDTH;
@@ -229,7 +232,6 @@ public class AngryFlappyBird extends Application {
     	 
     	 // step2: update blob
     	 private void moveBlob() {
-    		 
 			long diffTime = System.nanoTime() - clickTime;
 			
 			// blob flies upward with animation
@@ -237,7 +239,7 @@ public class AngryFlappyBird extends Application {
 				
 				int imageIndex = Math.floorDiv(counter++, DEF.GOOSE_IMG_PERIOD);
 				imageIndex = Math.floorMod(imageIndex, DEF.GOOSE_IMG_LEN);
-				goose.setImage(DEF.IMAGE.get("blob"+String.valueOf(imageIndex)));
+				goose.setImage(DEF.IMAGE.get("goose"+String.valueOf(imageIndex)));
 				goose.setVelocity(0, DEF.GOOSE_FLY_VEL);
 			}
 			// blob drops after a period of time without button click
@@ -252,28 +254,38 @@ public class AngryFlappyBird extends Application {
     	 }
     	 
     	 // Step3: Move pipes
+ 
     	 private void movePipes() {
-    	     for (Sprite pipe : pipes) {
-    	         if (pipe != null) {
-    	             pipe.render(gc);
-    	             pipe.update(DEF.SCENE_SHIFT_TIME);
-    	             // Debug output to confirm the pipe's position and visibility
-    	             System.out.println("Pipe position X: " + pipe.getPositionX());
-    	         }
-    	     }
-    	 }
+             for (Pipe pipe : pipes) {
+                 if (pipes.size() != 0) {
+                     int lastPipe = pipes.size() - 1;
+                     
+                     if (pipes.get(lastPipe).getPositionX() == DEF.SCENE_WIDTH / 2 - 10) {
+                         initializePipes();
+                     } else if (pipes.get(lastPipe).getPositionX() <= -DEF.FLOOR_WIDTH ) {
+                         pipes.remove(0);
+                         pipes.remove(0);
+                     }
+                 } else { 
+                     initializePipes();
+                 }
+                 pipe.render(gc);
+                 pipe.update(DEF.SCENE_SHIFT_TIME);
+                 
+             }
+         }
     	 
     	 void checkCollision() {
     		 
     		// check collision  
-			for (Sprite floor: floors) {
+			for (Floor floor: floors) {
 				GAME_OVER = GAME_OVER || goose.intersectsSprite(floor);
 			}
 			
 			// end the game when blob hit stuff
 			if (GAME_OVER) {
 				showHitEffect(); 
-				for (Sprite floor: floors) {
+				for (Floor floor: floors) {
 					floor.setVelocity(0, 0);
 				}
 				timer.stop();

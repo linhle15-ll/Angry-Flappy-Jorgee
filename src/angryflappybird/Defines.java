@@ -7,7 +7,7 @@ import java.util.HashMap;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
+//import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -43,24 +43,26 @@ public class Defines {
     final int FLOOR_COUNT = 2;
     
     // coefficients related to the pipes - Linh Ngoc Le
-    final int PIPES_GAP = GOOSE_HEIGHT + 6;
+    final int PIPES_COUNT = 2;
     final int PIPE_WIDTH = 70;
-    final int PIPE_HEIGHT = 150; 
-    final int PIPE_MIN_HEIGHT = 100;
-    final int PIPE_MAX_HEIGHT = PIPE_HEIGHT - PIPES_GAP - PIPE_MIN_HEIGHT;
+    final int UPPER_PIPE_HEIGHT = 210;
+    final int LOWER_PIPE_HEIGHT = 210;
+   
+    final int PIPE_MIN_HEIGHT = 120;
+    final int PIPE_MAX_HEIGHT = 150;
+    
+    final int PIPES_GAP = 50; 
      
     final int LOWER_PIPE_POS_X = 70;
     final int UPPER_PIPE_POS_X = 70;
     
     final int LOWER_PIPE_POS_Y = 70;
-    final int UPPER_PIPE_POS_Y = 70;
-    
-    final int PIPES_COUNT = 2;
+    final int UPPER_PIPE_POS_Y = 50;
     
     // velocity at which pipes move - Linh Ngoc Le
-    final int PIPE_VEL_EASY = 5;
-    final int PIPE_VEL_MEDIUM = 10;
-    final int PIPE_VEL_HARD = 20;
+    final int PIPE_VEL_EASY = -5;
+    final int PIPE_VEL_MEDIUM = -3;
+    final int PIPE_VEL_HARD = 1;
                                
     // coefficients related to raibow candy - Linh Ngoc Le
     final int RAINBOW_CANDY_WIDTH = 60;
@@ -84,18 +86,21 @@ public class Defines {
     
     // coefficients related to media display
     final String STAGE_TITLE = "Angry Flappy Bird - George Version";
-	private final String IMAGE_DIR = "../resources/images/";
-    final String[] IMAGE_FILES = {"day_background", "night_background", "goose0", "goose1", "goose2", "goose3", "floor", "lower_pipe", "upper_pipe", "rainbow_candy", "normal_candy", "dragon"}; // More sprite here 
+    private final String IMAGE_DIR = "../resources/images/";
+    final String[] IMAGE_FILES = {"day_background", "night_background", "goose0", "goose1", "goose2", "goose3", "floor", "lower_pipe", "upper_pipe", "rainbow_candy", "normal_candy", "dragon"};  
 
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();
     
-    //nodes on the scene graph - start game, level selection, instruction box
+    // Coefficients related to sounds
+    
+    // nodes on the scene graph - start game, level selection, instruction box
     Button startButton;
     ChoiceBox<String> levelSelection;
     VBox instruction;
     
     // constructor
+    // Linh Ngoc Le
 	Defines() {
 		
 		// initialize images
@@ -111,10 +116,10 @@ public class Defines {
                 img = new Image(pathImage(IMAGE_FILES[i]), FLOOR_WIDTH, FLOOR_HEIGHT, false, false);
             }
 			else if (i == 7) {
-			    img = new Image(pathImage(IMAGE_FILES[i]), PIPE_WIDTH, PIPE_HEIGHT, false, false);
+			    img = new Image(pathImage(IMAGE_FILES[i]), PIPE_WIDTH, LOWER_PIPE_HEIGHT, false, false);
 			}
 			else if (i == 8) {
-			    img = new Image(pathImage(IMAGE_FILES[i]), PIPE_WIDTH, PIPE_HEIGHT, false, false);
+			    img = new Image(pathImage(IMAGE_FILES[i]), PIPE_WIDTH, UPPER_PIPE_HEIGHT, false, false);
             }
 			else if (i == 9) {
 			    img = new Image(pathImage(IMAGE_FILES[i]), RAINBOW_CANDY_WIDTH, RAINBOW_CANDY_HEIGHT, false, false);
@@ -139,8 +144,8 @@ public class Defines {
 		levelSelection = new ChoiceBox<String>(FXCollections.observableArrayList(
 		        "Easy", "Medium", "Hard")
 		);
+		levelSelection.getSelectionModel().selectFirst();
 		
-        // Instruction - Linh Ngoc Le
 		instruction = new VBox(10);
 //		row 1: Bonus point (normal candy)
 		VBox row1 = new VBox(10);

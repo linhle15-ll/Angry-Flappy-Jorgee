@@ -3,17 +3,19 @@ package angryflappybird;
 import javafx.scene.image.Image;
 
 /**
+ * @param pX
+ * @param pY
+ * @param image
  * @author Linh Ngoc Le
  */
-public class Pipe extends Sprite {
+public class Floor extends Sprite{
     /**
      * @param pX
      * @param pY
      * @param image
      */
-    public Pipe(double pX, double pY, Image image) {
+    public Floor(double pX, double pY, Image image) {
         super(pX, pY, image);
     }
-
 
 }
