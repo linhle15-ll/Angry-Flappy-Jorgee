@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import javafx.collections.FXCollections;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 //import javafx.scene.control.ComboBox;
@@ -17,6 +19,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+/**
+ * 
+ */
 public class Defines {
     
 	// dimension of the GUI application
@@ -27,8 +32,8 @@ public class Defines {
 
     // coefficients related to the goose
     
-    final int GOOSE_WIDTH = 90;
-    final int GOOSE_HEIGHT = 90;
+    final int GOOSE_WIDTH = 80;
+    final int GOOSE_HEIGHT = 80;
     final int GOOSE_POS_X = 70;
     final int GOOSE_POS_Y = 200;
     final int GOOSE_DROP_TIME = 300000000;  	// the elapsed time threshold before the goose starts dropping
@@ -39,30 +44,24 @@ public class Defines {
     
     // coefficients related to the floors
     final int FLOOR_WIDTH = 400;
-    final int FLOOR_HEIGHT = 100;
+    final int FLOOR_HEIGHT = 80;
     final int FLOOR_COUNT = 2;
     
     // coefficients related to the pipes - Linh Ngoc Le
     final int PIPES_COUNT = 2;
-    final int PIPE_WIDTH = 70;
-    final int UPPER_PIPE_HEIGHT = 210;
-    final int LOWER_PIPE_HEIGHT = 210;
+    final int PIPE_WIDTH = 80;
+    final int UPPER_PIPE_HEIGHT = 230;
+    final int LOWER_PIPE_HEIGHT = 230;
    
     final int PIPE_MIN_HEIGHT = 120;
-    final int PIPE_MAX_HEIGHT = 150;
+    final int PIPE_MAX_HEIGHT = 235;
     
-    final int PIPES_GAP = 50; 
-     
-    final int LOWER_PIPE_POS_X = 70;
-    final int UPPER_PIPE_POS_X = 70;
-    
-    final int LOWER_PIPE_POS_Y = 70;
-    final int UPPER_PIPE_POS_Y = 50;
+    final int PIPES_GAP = 120; 
     
     // velocity at which pipes move - Linh Ngoc Le
-    final int PIPE_VEL_EASY = -5;
-    final int PIPE_VEL_MEDIUM = -3;
-    final int PIPE_VEL_HARD = 1;
+    final double PIPE_VEL_EASY = -0.5;
+    final double PIPE_VEL_MEDIUM = -0.5;
+    final double PIPE_VEL_HARD = -0.5;
                                
     // coefficients related to raibow candy - Linh Ngoc Le
     final int RAINBOW_CANDY_WIDTH = 60;
@@ -71,10 +70,13 @@ public class Defines {
     // coefficients related to normal candy - Linh Ngoc Le
     final int NORMAL_CANDY_WIDTH = 60;
     final int NORMAL_CANDY_HEIGHT = 60;
+    final int CANDY_COUNT = 30;
+    double CANDY_OCCURENCE = 3.5;
     
     // coefficients related to dragon - Linh Ngoc Le
     final int DRAGON_HEIGHT = 60;
     final int DRAGON_WIDTH = 60;
+    final int DRAGON_DROP_VEL = 300;    
     
     // coefficients related to time
     final int SCENE_SHIFT_TIME = 5;
@@ -82,7 +84,12 @@ public class Defines {
     final double NANOSEC_TO_SEC = 1.0 / 1000000000.0;
     final double TRANSITION_TIME = 0.1;
     final int TRANSITION_CYCLE = 2;
+    double BACKGROUND_TIME = 0;
     
+    // coefficients related to scores and lives
+    int TOTAL_LIVES = 3;
+    int TOTAL_SCORES = 0;
+    int SNOOZE_TIME = 6;
     
     // coefficients related to media display
     final String STAGE_TITLE = "Angry Flappy Bird - George Version";
@@ -93,6 +100,8 @@ public class Defines {
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();
     
     // Coefficients related to sounds
+    
+   
     
     // nodes on the scene graph - start game, level selection, instruction box
     Button startButton;
@@ -185,27 +194,30 @@ public class Defines {
     	return IMAGE.get(filepath);
     }
 	
+	
+	
 //	COEFFICIENTS FOR DIFFERENT LEVELS 
 	/**
-     * Reset sprites coefficients for levels
-     * @param 
-     * @param 
-     * @return resized image
+     * Reset sprites coefficients for easy level
+     * @author Linh Ngoc Le
      */
 	public static void easyLevel() {
 	    System.out.println("Set the easy level.");
 	}
 	
 	/**
-	 * 
+	 * Reset sprites coefficients for easy level
+     * @author Linh Ngoc Le
 	 */
 	public static void mediumLevel() {
 	    System.out.println("Set the medium level.");
 	}
 	
 	/**
-	 * 
+	 * Reset sprites coefficients for easy level
+     * @author Linh Ngoc Le
 	 */
 	public static void hardLevel() {
-	    System.out.println("Set the hard level.");	}
+	    System.out.println("Set the hard level.");	
+	}
 }

@@ -74,6 +74,14 @@ public class Sprite {
     }
     
     /**
+     * @author Ngoc Linh Le
+     * @param positionY 
+     */
+    public void setPositionY(double positionY) {
+        this.positionY = positionY;
+    }
+    
+    /**
      * @param velocityX
      * @param velocityY
      */
@@ -111,7 +119,31 @@ public class Sprite {
     public double getWidth() {
         return width;
     }
-
+    
+    /**
+     * @param width: new width
+     * @return
+     */
+    public void setWidth(double width) {
+        this.width = width;
+        
+    }
+    
+    /**
+     * @return
+     */
+    public double getHeight() {
+        return height;
+    }
+    
+    /**
+     * @param height
+     * @return
+     */
+    public void setHeight(double height) {
+        this.height = height;
+        
+    } 
     /**
      * @param gc
      */
