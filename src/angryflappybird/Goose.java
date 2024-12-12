@@ -17,5 +17,15 @@ public class Goose extends Sprite{
     public Goose(double pX, double pY, Image image) {
         super(pX, pY, image);
     }
+    
+    /**
+     * @param pipe
+     * @return
+     */
+    public boolean isPassingPipe(Pipe pipe) {
+        // Check if the goose has passed the pipe
+        return this.getPositionX() > pipe.getPositionX() + pipe.getWidth();
+    }
+    
 
 }

@@ -56,7 +56,7 @@ public class Defines {
     final int PIPE_MIN_HEIGHT = 120;
     final int PIPE_MAX_HEIGHT = 235;
     
-    final int PIPES_GAP = 120; 
+    final int PIPES_GAP = 200; 
     
     // velocity at which pipes move - Linh Ngoc Le
     final double PIPE_VEL_EASY = -0.5;
@@ -76,7 +76,7 @@ public class Defines {
     // coefficients related to dragon - Linh Ngoc Le
     final int DRAGON_HEIGHT = 60;
     final int DRAGON_WIDTH = 60;
-    final int DRAGON_DROP_VEL = 300;    
+    final int DRAGON_DROP_VEL = 100;
     
     // coefficients related to time
     final int SCENE_SHIFT_TIME = 5;
@@ -94,14 +94,15 @@ public class Defines {
     // coefficients related to media display
     final String STAGE_TITLE = "Angry Flappy Bird - George Version";
     private final String IMAGE_DIR = "../resources/images/";
+    
     final String[] IMAGE_FILES = {"day_background", "night_background", "goose0", "goose1", "goose2", "goose3", "floor", "lower_pipe", "upper_pipe", "rainbow_candy", "normal_candy", "dragon"};  
-
+    
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();
     
     // Coefficients related to sounds
     
-   
+    
     
     // nodes on the scene graph - start game, level selection, instruction box
     Button startButton;

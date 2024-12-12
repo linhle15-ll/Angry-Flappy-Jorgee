@@ -15,10 +15,9 @@ public class Pipe extends Sprite {
      * @param isLowerPipe 
      * @param isScored 
      */
-    public Pipe(double pX, double pY, Image image, boolean isLowerPipe, boolean isScored) {
+    public Pipe(double pX, double pY, Image image, boolean isLowerPipe) {
         super(pX, pY, image);
         this.isLowerPipe = isLowerPipe;
-        this.isScored = isScored;
     }
     
 
