@@ -34,10 +34,12 @@ public class Defines {
     
     final int GOOSE_WIDTH = 80;
     final int GOOSE_HEIGHT = 80;
+    final int GOOSE_AUTO_WIDTH = 130;
+    final int GOOSE_AUTO_HEIGHT = 90;
     final int GOOSE_POS_X = 70;
     final int GOOSE_POS_Y = 200;
-    final int GOOSE_DROP_TIME = 300000000;  	// the elapsed time threshold before the goose starts dropping
-    final int GOOSE_DROP_VEL = 300;    		// the goose drop velocity
+    final int GOOSE_DROP_TIME = 200000000;  	// the elapsed time threshold before the goose starts dropping
+    final int GOOSE_DROP_VEL = 350;    		// the goose drop velocity
     final int GOOSE_FLY_VEL = -40;
     final int GOOSE_IMG_LEN = 4;
     final int GOOSE_IMG_PERIOD = 5;
@@ -50,8 +52,8 @@ public class Defines {
     // coefficients related to the pipes - Linh Ngoc Le
     final int PIPES_COUNT = 2;
     final int PIPE_WIDTH = 80;
-    final int UPPER_PIPE_HEIGHT = 230;
-    final int LOWER_PIPE_HEIGHT = 230;
+    final int UPPER_PIPE_HEIGHT = 210;
+    final int LOWER_PIPE_HEIGHT = 210;
    
     final int PIPE_MIN_HEIGHT = 120;
     final int PIPE_MAX_HEIGHT = 235;
@@ -95,7 +97,7 @@ public class Defines {
     final String STAGE_TITLE = "Angry Flappy Bird - George Version";
     private final String IMAGE_DIR = "../resources/images/";
     
-    final String[] IMAGE_FILES = {"day_background", "night_background", "goose0", "goose1", "goose2", "goose3", "floor", "lower_pipe", "upper_pipe", "rainbow_candy", "normal_candy", "dragon"};  
+    final String[] IMAGE_FILES = {"day_background", "night_background", "goose0", "goose1", "goose2", "goose3", "floor", "lower_pipe", "upper_pipe", "rainbow_candy", "normal_candy", "dragon", "auto"};  
     
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();
@@ -136,6 +138,9 @@ public class Defines {
 			}
 			else if (i == 10) {
 			    img = new Image(pathImage(IMAGE_FILES[i]), NORMAL_CANDY_WIDTH, NORMAL_CANDY_HEIGHT, false, false);
+			} 
+			else if (i == 12) {
+			    img = new Image(pathImage(IMAGE_FILES[i]), GOOSE_AUTO_WIDTH, GOOSE_AUTO_HEIGHT, false, false);
 			}
 			else {
 			    img = new Image(pathImage(IMAGE_FILES[i]), DRAGON_WIDTH, DRAGON_HEIGHT, false, false);

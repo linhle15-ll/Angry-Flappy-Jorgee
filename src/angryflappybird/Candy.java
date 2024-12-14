@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
  * @author Linh Ngoc Le
  */
 public class Candy extends Sprite {
-    boolean isRainbowCandy;
+    private boolean isRainbowCandy;
 
     /**
      * @param pX
@@ -16,7 +16,7 @@ public class Candy extends Sprite {
      */
     public Candy(double pX, double pY, Image image, boolean isRainbowCandy) {
         super(pX, pY, image);
-        this.isRainbowCandy = true;
+        this.isRainbowCandy = isRainbowCandy;
         
     }
 

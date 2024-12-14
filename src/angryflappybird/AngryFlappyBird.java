@@ -155,12 +155,13 @@ public class AngryFlappyBird extends Application {
         isAutoPilot = false;
         inBounceBackMode = false;
         GAME_OVER = false;
-        CLICKED = false;
-
+        GAME_START = false;
+        CLICKED = true;
+        
         // Reset the background switch timer
         lastBackgroundSwitchTime = System.nanoTime();
 
-        // Create canvas
+        // Create canvas - where you can draw shape, image, text 
         Canvas canvas = new Canvas(DEF.SCENE_WIDTH, DEF.SCENE_HEIGHT);
         gc = canvas.getGraphicsContext2D();
 
@@ -180,7 +181,7 @@ public class AngryFlappyBird extends Application {
 
         snoozeText = new Text(20, 95, ""); 
         snoozeText.setFont(Font.font("Arial", FontWeight.NORMAL, 30));
-        snoozeText.setFill(Color.YELLOW);
+        snoozeText.setFill(Color.RED);
 
         scoreText = new Text(25, 60, "");
         scoreText.setFont(Font.font("Arial", FontWeight.NORMAL, 50));
@@ -191,11 +192,9 @@ public class AngryFlappyBird extends Application {
         livesText.setFont(Font.font("Arial", FontWeight.BOLD, 30));
         livesText.setFill(Color.RED);
 
-        gameScene.getChildren().addAll(canvas, background, getReadyText, gameOverText, snoozeText, scoreText, livesText);
+        gameScene.getChildren().addAll(background, canvas, getReadyText, gameOverText, snoozeText, scoreText, livesText);
 
         if (isFreshEntry) {
-            GAME_START = false; 
-            CLICKED = false;
             isDay = true;
             getReadyText.setText("Get Ready");
 
@@ -206,7 +205,6 @@ public class AngryFlappyBird extends Application {
             livesText.setText(Integer.toString(DEF.TOTAL_LIVES));
         } else {
             GAME_START = true;
-            CLICKED = true;
             scoreText.setText(Integer.toString(DEF.TOTAL_SCORES));
             livesText.setText(Integer.toString(DEF.TOTAL_LIVES));
         }
@@ -225,19 +223,21 @@ public class AngryFlappyBird extends Application {
 
         if (pipes == null) pipes = new ArrayList<>();
         pipes.clear();
-        initializePipes();
+        
 
         if (candies == null) candies = new ArrayList<>();
         candies.clear();
 
         if (dragons == null) dragons = new ArrayList<>();
         dragons.clear();
-       
+      
         if (goose == null) {
             goose = new Goose(DEF.GOOSE_POS_X, DEF.GOOSE_POS_Y, DEF.IMAGE.get("goose0"));
         }
         goose.setPositionXY(DEF.GOOSE_POS_X, DEF.GOOSE_POS_Y);
 
+        initializePipes();
+        
         startTime = System.nanoTime();
 
         if (timer != null) {
@@ -247,8 +247,6 @@ public class AngryFlappyBird extends Application {
         timer.start();
     }
 
-
-    
     /**
      * initialize switchBackground
      * toggle between day and night
@@ -287,8 +285,8 @@ public class AngryFlappyBird extends Application {
         Candy normalCandy;
         
         double random = Math.random();  //random coefficient for candies 
-        
-        if (0.4 >= random && random >= 0.35) {
+
+        if (0.4 >= random && random >= 0.2) {
             rainbowCandy = new Candy(
                     pipeWidthCandyPosX, 
                     pipeWidthCandyPosY - DEF.RAINBOW_CANDY_HEIGHT, 
@@ -302,7 +300,7 @@ public class AngryFlappyBird extends Application {
             rainbowCandy.render(gc);
             candies.add(rainbowCandy);
             
-        } else if (0.8 <= random && random <= 0.9) {
+        } else if (0.5 <= random && random <= 0.9) {
                 
             normalCandy = new Candy(
                     pipeWidthCandyPosX, 
@@ -319,13 +317,25 @@ public class AngryFlappyBird extends Application {
        
     }
     
+    
     /**
      * initialize pipes
      * @author Linh Ngoc Le
      */
     private void initializePipes() {
-        Pipe lowerPipe = new Pipe(400, DEF.SCENE_HEIGHT -  generateRandomHeight(DEF.PIPE_MAX_HEIGHT, DEF.PIPE_MIN_HEIGHT), DEF.IMAGE.get("lower_pipe"), true); 
-        Pipe upperPipe = new Pipe(400, generateRandomHeight(0, -30), DEF.IMAGE.get("upper_pipe"), false);
+        Pipe lowerPipe = new Pipe(
+                400, 
+                DEF.SCENE_HEIGHT - generateRandomHeight(DEF.PIPE_MAX_HEIGHT, DEF.PIPE_MIN_HEIGHT) + DEF.PIPES_GAP/5, 
+                DEF.IMAGE.get("lower_pipe"), 
+                true
+        );
+        Pipe upperPipe = new Pipe(
+                400, 
+                generateRandomHeight(0, -50) - DEF.PIPES_GAP/5, 
+                DEF.IMAGE.get("upper_pipe"), 
+                false
+        );
+        
        
         lowerPipe.setVelocity(DEF.PIPE_VEL_EASY, 0);
         upperPipe.setVelocity(DEF.PIPE_VEL_EASY, 0);
@@ -350,26 +360,58 @@ public class AngryFlappyBird extends Application {
         }
 
     }
-
+    
+    /**
+     * initialize pipes on autoPilot
+     * @author Linh Ngoc Le
+     */
+    private void initializePipesAutoPilot() {
+     
+        Pipe lowerPipe = new Pipe(
+                400,
+                goose.getPositionY() + DEF.PIPES_GAP/1.2,
+                DEF.IMAGE.get("lower_pipe"),
+                true
+        );
+        Pipe upperPipe = new Pipe(
+                400,
+                goose.getPositionY() - DEF.PIPES_GAP * 1.5,
+                DEF.IMAGE.get("upper_pipe"),
+                false
+        );
+       
+        lowerPipe.setVelocity(DEF.PIPE_VEL_EASY, 0);
+        upperPipe.setVelocity(DEF.PIPE_VEL_EASY, 0);
+        
+        pipes.add(upperPipe);
+        pipes.add(lowerPipe);
+       
+    }
+    
+  
+    
     /**
      * Initialize dragons
      * Dragon drops randomly from the sky (from some random upperPipe)
      * @author Linh Ngoc Le
      */
-    private void initializeDragons(double upperPipeWithDragonPosX, double upperPipeWithDragonPosY) { //////////////////////////////////
+    private void initializeDragons(double upperPipeWithDragonPosX, double upperPipeWithDragonPosY) {
         double random = Math.random();
-        if (0.3 <= random && random <= 0.6) { // Adjust drop rate
-            Dragon dragon = new Dragon(
-                upperPipeWithDragonPosX, 
-                upperPipeWithDragonPosY, 
-                DEF.IMAGE.get("dragon")
-            );
+        if (0.3 <= random && random <= 0.9) { // Adjust drop rate
+         // have to update the positions x and y
+            Dragon dragon = new Dragon(400, 20, DEF.IMAGE.get("dragon"));
+            
+            dragon.setVelocity(-DEF.DRAGON_DROP_VEL, DEF.DRAGON_DROP_VEL);
+            
             dragon.setHeight(DEF.DRAGON_HEIGHT);
             dragon.setWidth(DEF.DRAGON_WIDTH);
-            dragon.setVelocity(0, DEF.DRAGON_DROP_VEL);
             dragons.add(dragon);
+            
+            // Debugging output
+            System.out.println("Dragon initialized at X: " + upperPipeWithDragonPosX + ", Y: " + (upperPipeWithDragonPosY - DEF.DRAGON_HEIGHT));
         }
     }
+
     
     //timer stuff
     class MyTimer extends AnimationTimer {
@@ -406,11 +448,25 @@ public class AngryFlappyBird extends Application {
                  GAME_START = true; // make every object move
              }
 
-             // if isAutoPilot is on and we have finished the duration of autopilot
-             if (isAutoPilot && autoPilotTime > endAutoPilotTime) {
-                 isAutoPilot = false;
-                 
+             // If autopilot is active, update the countdown for snoozeText
+             if (isAutoPilot) {
+                 CLICKED = false;
+                 long remainingTime = (endAutoPilotTime - now) / 1000000000; // Convert nanoseconds to seconds
+                 snoozeText.setText(remainingTime + "s to go");
+
+                 // Stop autopilot when time is up
+                 if (now > endAutoPilotTime) {
+                     isAutoPilot = false;
+                     
+                     // back to fly as usual
+                     clickTime = now;
+                     CLICKED = true;
+                     moveBlob(); 
+                     
+                     snoozeText.setText("");  // Clear the countdown text
+                 }
              }
+             
     	     if (GAME_START) {
     	    	 // step1: update floor
     	    	 moveFloor();
@@ -442,11 +498,13 @@ public class AngryFlappyBird extends Application {
     	 }
     	 
     	 private void moveBlob() {
-    	    if (!isAutoPilot) {
+    	     
+    	    if (!isAutoPilot && !inBounceBackMode) {
+    	        
     	        long diffTime = System.nanoTime() - clickTime;
                 
                 // blob flies upward with animation
-                if (CLICKED && diffTime <= DEF.GOOSE_DROP_TIME && !inBounceBackMode) {
+                if (CLICKED && diffTime <= DEF.GOOSE_DROP_TIME) {
                     
                     int imageIndex = Math.floorDiv(counter++, DEF.GOOSE_IMG_PERIOD);
                     imageIndex = Math.floorMod(imageIndex, DEF.GOOSE_IMG_LEN);
@@ -454,31 +512,15 @@ public class AngryFlappyBird extends Application {
                     goose.setVelocity(0, DEF.GOOSE_FLY_VEL);
                 }
                 // blob drops after a period of time without button click
-                else if (CLICKED && diffTime > DEF.GOOSE_DROP_TIME && !inBounceBackMode) {
+                else if (CLICKED && diffTime > DEF.GOOSE_DROP_TIME) {
                     goose.setVelocity(0, DEF.GOOSE_DROP_VEL); 
                     CLICKED = false;
                 }
-    	    } else {
+    	    } else if (isAutoPilot){
     	        goose.setImage(DEF.IMAGE.get("auto"));
-                goose.setVelocity(0, DEF.GOOSE_FLY_VEL);
+    	        goose.setPositionXY(DEF.GOOSE_POS_X, DEF.GOOSE_POS_Y);
+    	        goose.setVelocity(0, 0);
     	    }
-    	    long diffTime = System.nanoTime() - clickTime;
-            
-            // blob flies upward with animation
-            if (CLICKED && diffTime <= DEF.GOOSE_DROP_TIME && !inBounceBackMode) {
-                
-                int imageIndex = Math.floorDiv(counter++, DEF.GOOSE_IMG_PERIOD);
-                imageIndex = Math.floorMod(imageIndex, DEF.GOOSE_IMG_LEN);
-                goose.setImage(DEF.IMAGE.get("goose"+String.valueOf(imageIndex)));
-                goose.setVelocity(0, DEF.GOOSE_FLY_VEL);
-            }
-            // blob drops after a period of time without button click
-            else if (CLICKED && diffTime > DEF.GOOSE_DROP_TIME && !inBounceBackMode) {
-                goose.setVelocity(0, DEF.GOOSE_DROP_VEL); 
-                CLICKED = false;
-            }
-			
-
 			// render blob on GUI
 			goose.update(elapsedTime * DEF.NANOSEC_TO_SEC);
 			goose.render(gc);
@@ -498,7 +540,12 @@ public class AngryFlappyBird extends Application {
                      
                      // initialize pipes from the right before entering main scene
                      if (pipes.get(lastPipe).getPositionX() == DEF.SCENE_WIDTH / 2 - 20) {
-                         initializePipes();
+                         if (isAutoPilot) {
+                             initializePipesAutoPilot();
+                         } else {
+                             initializePipes();
+                         }
+                         
                        
                      // remove pipes on the left after exiting the main scene
                      } else if (pipes.get(lastPipe).getPositionX() <= -DEF.SCENE_WIDTH + 10) {
@@ -506,7 +553,11 @@ public class AngryFlappyBird extends Application {
                      }
                      
                  } else { 
-                     initializePipes();
+                     if (isAutoPilot) {
+                         initializePipesAutoPilot();
+                     } else {
+                         initializePipes();
+                     }
                  }
                  
                  pipe.render(gc);
@@ -531,8 +582,9 @@ public class AngryFlappyBird extends Application {
           */
          private void moveDragons() {
              for (Dragon dragon: dragons) {
-                 dragon.update(DEF.SCENE_SHIFT_TIME);
                  dragon.render(gc);
+                 dragon.update(DEF.SCENE_SHIFT_TIME);
+                 
              }
          }
          
@@ -541,41 +593,26 @@ public class AngryFlappyBird extends Application {
           * snooze for 6 seconds without hindrance 
           * @author Linh Ngoc Le
           */
-         private void autoPilot() { ///////////// CHECKKK
-             isAutoPilot = true;
-             CLICKED = false;
-             DEF.startButton.setDisable(true); // prevent user from moving the fish while on snooze
+         private void autoPilot() {
              
-             long startTimeAutoPilot = System.nanoTime();
+             isAutoPilot = true; // Activate autopilot mode
+             CLICKED = false;    // Disable manual control
+             
              autoPilotTime = System.nanoTime();
              endAutoPilotTime = autoPilotTime + autoPilotDurationNano;
              
-             // update bounceElapsedTime?
-             if (autoPilotTime > startTimeAutoPilot && autoPilotTime < endAutoPilotTime) {
-//                 goose.setImage(DEF.IMAGE.get("auto"));
-//                 
-//                 goose.setVelocity(0, DEF.GOOSE_FLY_VEL);
-
-                 // Check the position of pipes ahead to avoid collisions
-                 for (Pipe pipe : pipes) {
-                     // Calculate the vertical position where the goose needs to be to avoid this pipe
-                     double targetPositionY = pipe.getPositionY() + pipe.getHeight() + DEF.PIPES_GAP / 2;
-                     
-                     // If the goose is within range of this pipe, adjust the Y velocity to move towards the target position
-                     if (goose.getPositionX() + goose.getWidth() > pipe.getPositionX() && 
-                         goose.getPositionX() < pipe.getPositionX() + pipe.getWidth()) {
-                         double distanceToTarget = targetPositionY - goose.getPositionY();
-                         if (Math.abs(distanceToTarget) > 1) {
-                             // Adjust the velocity to move the goose towards the target position
-                             goose.setVelocity(0, distanceToTarget > 0 ? 1 : -1);
-                         }
-                         break; // Only adjust once per pipe to avoid excessive changes
-                     }
-                 }
-             }
+             goose.setVelocity(0, 0);
              
+             
+             // Suppress hindrances (candies and dragons)
+             for (Candy candy : candies) {
+                 candy.setPositionXY(-DEF.SCENE_WIDTH, -DEF.SCENE_HEIGHT); // Move out of view temporarily
+             }
+
+             for (Dragon dragon : dragons) {
+                 dragon.setPositionXY(-DEF.SCENE_WIDTH, -DEF.SCENE_HEIGHT); // Move out of view temporarily
+             }
          }
-         
          /**
           * Bounce back the goose diagonally downward and backward when it hits the pipe or the dragon.
           * The animation lasts 2 seconds.
@@ -584,7 +621,6 @@ public class AngryFlappyBird extends Application {
          public void bounceBack() {
              inBounceBackMode = true;
              CLICKED = false;
-             DEF.startButton.setDisable(true); // prevent user from moving the fish while on snooze
 
              long startTimeBounceBack = System.nanoTime();
              bounceBackTime = System.nanoTime();
@@ -616,9 +652,9 @@ public class AngryFlappyBird extends Application {
           * @author Linh Ngoc Le
           */
         // Flag to prevent multiple deductions for the same collision
+         
 
          private void checkCollision() {
-             
              // Check collision: Goose - Floor 
              for (Floor floor: floors) {
                  if (goose.intersectsSprite(floor)) {
@@ -641,11 +677,10 @@ public class AngryFlappyBird extends Application {
              }
              
              // Check collision: Goose - Pipe
-             // Track how many pipes the goose is colliding with in the current frame
              // this solves the problem of incrementing the score by 2 each time hitting just a pipe
              
             boolean candyCollectedInThisFrame = false; // prioritize after effect colliding with a candy
-             
+            
             for (Pipe pipe: pipes) {
                  if (goose.intersectsSprite(pipe) && !hasCollidedWithPipe) {
                      bounceBack();
@@ -662,17 +697,23 @@ public class AngryFlappyBird extends Application {
                         
                      }
                      
-                 }  
+                 } 
+                 
+                 int currScorePipe = DEF.TOTAL_SCORES;
                  // Check if the pipe has not been scored and the goose has passed it
                  if (!pipe.isScored() && goose.getPositionX() > pipe.getPositionX() + pipe.getWidth()) {
                      pipe.setScored(true); // Mark this pipe as scored
                      
                      if (candyCollectedInThisFrame) {
+                         int newScoreCandyInPipe = DEF.TOTAL_SCORES;
+                         System.out.println("CANDY IN FRAME SCORE CHANGE: " + Integer.toString(newScoreCandyInPipe - currScorePipe));
                          break;
                      }
                      // Increment score only if no candy collision
                      else {
                          DEF.TOTAL_SCORES ++;
+                         int newScorePipe = DEF.TOTAL_SCORES;
+                         System.out.println("CANDY NOT IN FRAME SCORE: " + Integer.toString(newScorePipe - currScorePipe)); //scoreChange = 1
                      }
                  }
                  
@@ -680,21 +721,28 @@ public class AngryFlappyBird extends Application {
              }
 
              // Check for collision: Goose - Candies
+            int currScore = DEF.TOTAL_SCORES; // check for score change after bump into normal_candy (scoreChange = 5)
              if (candies.size() != 0) {
                  for (Candy candy : candies) {
                      if (goose.intersectsSprite(candy)) {
                          candyCollectedInThisFrame = true;
                          
                          if (candy.isRainbowCandy()) {
-                             System.out.println("BUMP INTO RAINBOW CANDY");
+                             double autoGoosePosY = candy.getPositionY();
+                             System.out.println("BUMP INTO RAINBOW CANDY, ");
                              candies.remove(candy);
+                             
                              autoPilot();
                              
-                         } else {
-                             System.out.print("BUMP INTO NORMAL CANDY");
+                         } else if (!candy.isRainbowCandy()) {
+                             isAutoPilot = false;
+                             
                              candies.remove(candy);
                              // Add bonus points for normal candy
                              DEF.TOTAL_SCORES += 5;
+                             int newScore = DEF.TOTAL_SCORES;
+                             System.out.print("BUMP INTO NORMAL CANDY, SCORE CHANGE: " + Integer.toString(newScore - currScore));
+                             
                          }
                      } 
                  }
