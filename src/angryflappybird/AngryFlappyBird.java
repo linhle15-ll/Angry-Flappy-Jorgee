@@ -4,6 +4,7 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -117,15 +118,53 @@ public class AngryFlappyBird extends Application {
     private void resetGameControl() {
         
         DEF.startButton.setOnMouseClicked(this::mouseClickHandler);
-        
-       // DEF.levelSelection.setOnAction(this::onLevelChange);
-        
+        DEF.levelSelection.setOnAction(this::onLevelChange);;
+
         gameControl = new VBox(20);
         gameControl.setPadding(new Insets(10,10,10,10));
         gameControl.getChildren().addAll(DEF.startButton, DEF.levelSelection, DEF.instruction);
     }
     
-    private void mouseClickHandler(MouseEvent e) {
+    /**
+     * Level change: Easy, Medium, Hard
+     * Only allow changing to another level when game is not start (avoid broken UI)
+     * @author Linh Ngoc Le
+     * @param event
+     */
+    public void onLevelChange(ActionEvent event) {
+        String selectedLevel = DEF.levelSelection.getValue(); // Get the selected value from ComboBox
+        if (!GAME_START) {
+            switch (selectedLevel) {
+            case "Easy":
+                System.out.println("Easy level");
+                DEF.easyLevel();
+                break;
+            case "Medium":
+                System.out.println("Medium level");
+                DEF.mediumLevel();
+                break;
+            case "Hard":
+                System.out.println("Hard level");
+                DEF.hardLevel();
+                break;
+            default:
+                System.out.println("Unknown level");
+                break;
+            }
+        } else {
+            System.out.println("Cannot change level on game start.");
+            DEF.levelSelection.getSelectionModel().select(selectedLevel);
+            DEF.levelSelection.setPromptText(selectedLevel);
+        }
+        
+    }
+    
+    /**
+     * handle mouse click event
+     * @author Linh Ngoc Le
+     * @param event
+     */
+    private void mouseClickHandler(MouseEvent event) {
     	if (GAME_OVER) {
     	    resetGameScene(true);
         }
@@ -179,8 +218,8 @@ public class AngryFlappyBird extends Application {
         gameOverText.setStroke(Color.BLACK);
         gameOverText.setFill(Color.RED);
 
-        snoozeText = new Text(20, 95, ""); 
-        snoozeText.setFont(Font.font("Arial", FontWeight.NORMAL, 30));
+        snoozeText = new Text(25, 95, ""); 
+        snoozeText.setFont(Font.font("Arial", FontWeight.BOLD, 40));
         snoozeText.setFill(Color.RED);
 
         scoreText = new Text(25, 60, "");
@@ -269,7 +308,7 @@ public class AngryFlappyBird extends Application {
      */
     @SuppressWarnings("static-method")
     public int generateRandomHeight(int maxH, int minH) {
-        int randomHeight = (int)(Math.random() * (maxH - minH)) + minH + 3;
+        int randomHeight = (int)(Math.random() * (maxH - minH)) + minH;
         return randomHeight;
     }
     
@@ -286,7 +325,7 @@ public class AngryFlappyBird extends Application {
         
         double random = Math.random();  //random coefficient for candies 
 
-        if (0.4 >= random && random >= 0.2) {
+        if (DEF.MAX_RAINBOW_CANDY_RATE >= random && random >= DEF.MIN_RAINBOW_CANDY_RATE) {
             rainbowCandy = new Candy(
                     pipeWidthCandyPosX, 
                     pipeWidthCandyPosY - DEF.RAINBOW_CANDY_HEIGHT, 
@@ -296,11 +335,11 @@ public class AngryFlappyBird extends Application {
             
             rainbowCandy.setHeight(DEF.RAINBOW_CANDY_HEIGHT);
             rainbowCandy.setWidth(DEF.RAINBOW_CANDY_WIDTH);
-            rainbowCandy.setVelocity(DEF.PIPE_VEL_EASY, 0);
+            rainbowCandy.setVelocity(DEF.PIPE_VEL, 0);
             rainbowCandy.render(gc);
             candies.add(rainbowCandy);
             
-        } else if (0.5 <= random && random <= 0.9) {
+        } else if (DEF.MIN_NORMAL_CANDY_RATE <= random && random <= DEF.MAX_NORMAL_CANDY_RATE) {
                 
             normalCandy = new Candy(
                     pipeWidthCandyPosX, 
@@ -310,7 +349,7 @@ public class AngryFlappyBird extends Application {
             );
             normalCandy.setHeight(DEF.NORMAL_CANDY_HEIGHT);
             normalCandy.setWidth(DEF.NORMAL_CANDY_WIDTH);
-            normalCandy.setVelocity(DEF.PIPE_VEL_EASY, 0);
+            normalCandy.setVelocity(DEF.PIPE_VEL, 0);
             normalCandy.render(gc);
             candies.add(normalCandy);
         }
@@ -337,8 +376,8 @@ public class AngryFlappyBird extends Application {
         );
         
        
-        lowerPipe.setVelocity(DEF.PIPE_VEL_EASY, 0);
-        upperPipe.setVelocity(DEF.PIPE_VEL_EASY, 0);
+        lowerPipe.setVelocity(DEF.PIPE_VEL, 0);
+        upperPipe.setVelocity(DEF.PIPE_VEL, 0);
         
         pipes.add(upperPipe);
         pipes.add(lowerPipe);
@@ -350,14 +389,14 @@ public class AngryFlappyBird extends Application {
         if (lowerPipeWidthCandyPosX >= DEF.SCENE_WIDTH) {
             initializeCandies(lowerPipeWidthCandyPosX, lowerPipeWidthCandyPosY);
         }            
+      
        
         // initialize dragons from upper pipes
         double upperPipeWithDragonPosX = upperPipe.getPositionX();
         double upperPipeWithDragonPosY = upperPipe.getPositionY();
+
+        initializeDragons(upperPipeWithDragonPosX, upperPipeWithDragonPosY);
         
-        if (upperPipeWithDragonPosX >= DEF.SCENE_WIDTH) {
-            initializeDragons(upperPipeWithDragonPosX, upperPipeWithDragonPosY);
-        }
 
     }
     
@@ -380,8 +419,8 @@ public class AngryFlappyBird extends Application {
                 false
         );
        
-        lowerPipe.setVelocity(DEF.PIPE_VEL_EASY, 0);
-        upperPipe.setVelocity(DEF.PIPE_VEL_EASY, 0);
+        lowerPipe.setVelocity(DEF.PIPE_VEL, 0);
+        upperPipe.setVelocity(DEF.PIPE_VEL, 0);
         
         pipes.add(upperPipe);
         pipes.add(lowerPipe);
@@ -397,18 +436,26 @@ public class AngryFlappyBird extends Application {
      */
     private void initializeDragons(double upperPipeWithDragonPosX, double upperPipeWithDragonPosY) {
         double random = Math.random();
-        if (0.3 <= random && random <= 0.9) { // Adjust drop rate
+        if (0.0 <= random && random <= 1.0) { // Adjust drop rate
          // have to update the positions x and y
-            Dragon dragon = new Dragon(400, 20, DEF.IMAGE.get("dragon"));
+            Dragon dragon = new Dragon(
+                    300, 
+                    100, 
+                    DEF.IMAGE.get("dragon")
+            );
             
-            dragon.setVelocity(-DEF.DRAGON_DROP_VEL, DEF.DRAGON_DROP_VEL);
+            
+            dragon.setVelocity(-dragon.getPositionX(), DEF.DRAGON_DROP_VEL);
+            
+            System.out.println("Dragon is at X: " + dragon.getPositionX() + ", Y: " + dragon.getPositionY());
             
             dragon.setHeight(DEF.DRAGON_HEIGHT);
             dragon.setWidth(DEF.DRAGON_WIDTH);
+            
             dragons.add(dragon);
             
             // Debugging output
-            System.out.println("Dragon initialized at X: " + upperPipeWithDragonPosX + ", Y: " + (upperPipeWithDragonPosY - DEF.DRAGON_HEIGHT));
+            System.out.println("Dragon initialized at X: " + dragon.getPositionX() + ", Y: " + dragon.getPositionY());
         }
     }
 
@@ -585,6 +632,8 @@ public class AngryFlappyBird extends Application {
                  dragon.render(gc);
                  dragon.update(DEF.SCENE_SHIFT_TIME);
                  
+                 // Debugging output
+                 System.out.println("Dragon at X: " + dragon.getPositionX() + ", Y: " + dragon.getPositionY());
              }
          }
          
