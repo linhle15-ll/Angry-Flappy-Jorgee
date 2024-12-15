@@ -72,6 +72,8 @@ public class Defines {
     final int DRAGON_HEIGHT = 60;
     final int DRAGON_WIDTH = 60;
     double DRAGON_DROP_VEL = 0.05;
+    double MIN_DRAGON_RATE = 0.3;
+    double MAX_DRAGON_RATE = 0.5;
     
     // coefficients related to time
     final int SCENE_SHIFT_TIME = 5;
@@ -210,6 +212,8 @@ public class Defines {
 	    this.MIN_RAINBOW_CANDY_RATE = 0.1;
 	    this.MAX_RAINBOW_CANDY_RATE = 0.4;
 	    this.DRAGON_DROP_VEL = 0.05;
+	    this.MIN_DRAGON_RATE = 0.3;
+	    this.MAX_DRAGON_RATE = 0.5;
 	}
 	
 	/**
@@ -225,6 +229,8 @@ public class Defines {
         this.MIN_RAINBOW_CANDY_RATE = 0.2;
         this.MAX_RAINBOW_CANDY_RATE = 0.4;
         this.DRAGON_DROP_VEL = 0.06;
+        this.MIN_DRAGON_RATE = 0.3;
+        this.MAX_DRAGON_RATE = 0.6;
 	}
 	
 	/**
@@ -240,5 +246,7 @@ public class Defines {
         this.MIN_RAINBOW_CANDY_RATE = 0.3;
         this.MAX_RAINBOW_CANDY_RATE = 0.4;
         this.DRAGON_DROP_VEL = 0.07;
+        this.MIN_DRAGON_RATE = 0.3;
+        this.MAX_DRAGON_RATE = 0.6;
 	}
 }
