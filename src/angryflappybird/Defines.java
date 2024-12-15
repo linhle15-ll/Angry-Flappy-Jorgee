@@ -3,24 +3,15 @@ package angryflappybird;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-
-import javafx.collections.FXCollections;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-//import javafx.scene.control.ComboBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 
 /**
- * 
+ * Define initial values
  */
 public class Defines {
     
@@ -40,7 +31,7 @@ public class Defines {
     final int GOOSE_POS_Y = 200;
     final int GOOSE_DROP_TIME = 200000000;  	// the elapsed time threshold before the goose starts dropping
     final int GOOSE_DROP_VEL = 350;    		// the goose drop velocity
-    final int GOOSE_FLY_VEL = -40;
+    int GOOSE_FLY_VEL = -40;
     final int GOOSE_IMG_LEN = 4;
     final int GOOSE_IMG_PERIOD = 5;
     
@@ -58,13 +49,11 @@ public class Defines {
     final int PIPE_MIN_HEIGHT = 120;
     final int PIPE_MAX_HEIGHT = 235;
     
-    final int PIPES_GAP = 200; 
+    int PIPES_GAP = 200; 
     
     // velocity at which pipes move - Linh Ngoc Le
-    final double PIPE_VEL_EASY = -0.5;
-    final double PIPE_VEL_MEDIUM = -0.5;
-    final double PIPE_VEL_HARD = -0.5;
-                               
+    double PIPE_VEL= -0.5;
+
     // coefficients related to raibow candy - Linh Ngoc Le
     final int RAINBOW_CANDY_WIDTH = 60;
     final int RAINBOW_CANDY_HEIGHT = 60;
@@ -73,12 +62,16 @@ public class Defines {
     final int NORMAL_CANDY_WIDTH = 60;
     final int NORMAL_CANDY_HEIGHT = 60;
     final int CANDY_COUNT = 30;
-    double CANDY_OCCURENCE = 3.5;
+    double MIN_NORMAL_CANDY_RATE = 0.5;
+    double MAX_NORMAL_CANDY_RATE = 0.8;
+    
+    double MIN_RAINBOW_CANDY_RATE = 0.2;
+    double MAX_RAINBOW_CANDY_RATE = 0.4;
     
     // coefficients related to dragon - Linh Ngoc Le
     final int DRAGON_HEIGHT = 60;
     final int DRAGON_WIDTH = 60;
-    final int DRAGON_DROP_VEL = 100;
+    double DRAGON_DROP_VEL = 0.05;
     
     // coefficients related to time
     final int SCENE_SHIFT_TIME = 5;
@@ -101,14 +94,15 @@ public class Defines {
     
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();
-    
+    final ArrayList<String> levels = new ArrayList<>(Arrays.asList("Easy", "Medium", "Hard"));
+
     // Coefficients related to sounds
     
     
     
     // nodes on the scene graph - start game, level selection, instruction box
     Button startButton;
-    ChoiceBox<String> levelSelection;
+    ComboBox<String> levelSelection;
     VBox instruction;
     
     // constructor
@@ -156,10 +150,10 @@ public class Defines {
 		
 		// initialize scene nodes - Linh Ngoc Le
 		startButton = new Button("Start game!");
-		levelSelection = new ChoiceBox<String>(FXCollections.observableArrayList(
-		        "Easy", "Medium", "Hard")
-		);
-		levelSelection.getSelectionModel().selectFirst();
+		levelSelection = new ComboBox<String>();
+		levelSelection.getItems().addAll(levels);
+		levelSelection.getSelectionModel().selectFirst(); 
+
 		
 		instruction = new VBox(10);
 //		row 1: Bonus point (normal candy)
@@ -207,23 +201,44 @@ public class Defines {
      * Reset sprites coefficients for easy level
      * @author Linh Ngoc Le
      */
-	public static void easyLevel() {
-	    System.out.println("Set the easy level.");
+	public void easyLevel() {
+	    this.GOOSE_FLY_VEL = -40;
+	    this.PIPE_VEL= -0.4;
+	    this.PIPES_GAP = 200; 
+	    this.MIN_NORMAL_CANDY_RATE = 0.5;
+	    this.MAX_NORMAL_CANDY_RATE = 0.8;
+	    this.MIN_RAINBOW_CANDY_RATE = 0.1;
+	    this.MAX_RAINBOW_CANDY_RATE = 0.4;
+	    this.DRAGON_DROP_VEL = 0.05;
 	}
 	
 	/**
 	 * Reset sprites coefficients for easy level
      * @author Linh Ngoc Le
 	 */
-	public static void mediumLevel() {
-	    System.out.println("Set the medium level.");
+	public void mediumLevel() {
+	    this.GOOSE_FLY_VEL = -45;
+	    this.PIPE_VEL= -0.8;
+	    this.PIPES_GAP = 190; 
+	    this.MIN_NORMAL_CANDY_RATE = 0.5;
+        this.MAX_NORMAL_CANDY_RATE = 0.8;
+        this.MIN_RAINBOW_CANDY_RATE = 0.2;
+        this.MAX_RAINBOW_CANDY_RATE = 0.4;
+        this.DRAGON_DROP_VEL = 0.06;
 	}
 	
 	/**
 	 * Reset sprites coefficients for easy level
      * @author Linh Ngoc Le
 	 */
-	public static void hardLevel() {
-	    System.out.println("Set the hard level.");	
+	public void hardLevel() {
+	    this.GOOSE_FLY_VEL = -50;
+	    this.PIPE_VEL= -0.8;
+	    this.PIPES_GAP = 190;
+	    this.MIN_NORMAL_CANDY_RATE = 0.6;
+        this.MAX_NORMAL_CANDY_RATE = 0.8;
+        this.MIN_RAINBOW_CANDY_RATE = 0.3;
+        this.MAX_RAINBOW_CANDY_RATE = 0.4;
+        this.DRAGON_DROP_VEL = 0.07;
 	}
 }
