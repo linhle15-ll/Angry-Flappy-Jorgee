@@ -436,16 +436,16 @@ public class AngryFlappyBird extends Application {
      */
     private void initializeDragons(double upperPipeWithDragonPosX, double upperPipeWithDragonPosY) {
         double random = Math.random();
-        if (0.0 <= random && random <= 1.0) { // Adjust drop rate
+        if (DEF.MIN_DRAGON_RATE <= random && random <= DEF.MAX_DRAGON_RATE) { // Adjust drop rate
          // have to update the positions x and y
             Dragon dragon = new Dragon(
-                    300, 
-                    100, 
+                    upperPipeWithDragonPosX, 
+                    upperPipeWithDragonPosY - DEF.DRAGON_HEIGHT, // Offset to ensure it starts above the visible screen
                     DEF.IMAGE.get("dragon")
             );
             
             
-            dragon.setVelocity(-dragon.getPositionX(), DEF.DRAGON_DROP_VEL);
+            dragon.setVelocity(0, DEF.DRAGON_DROP_VEL);
             
             System.out.println("Dragon is at X: " + dragon.getPositionX() + ", Y: " + dragon.getPositionY());
             
