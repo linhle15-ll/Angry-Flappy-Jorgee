@@ -12,7 +12,6 @@ This program implements the AngryFlappyJorge game, where a goose named Jorge nav
 
 <p align="center">
 ![Screenshot](https://github.com/user-attachments/assets/2f76f17c-e498-40fb-9887-86a31fade51c)
-  This is how it looks like!
 </p>
 
 ## Code Structure
