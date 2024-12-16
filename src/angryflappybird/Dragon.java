@@ -14,4 +14,5 @@ public class Dragon extends Sprite {
     public Dragon (double pX, double pY, Image image) {
         super(pX, pY, image);
     }
+ 
 }

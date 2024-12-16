@@ -25,7 +25,6 @@ import java.util.ArrayList;
 // for adding sound
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import java.io.File;
 
 /**
  * 
@@ -34,6 +33,13 @@ import java.io.File;
 public class AngryFlappyBird extends Application {
 	
 	private Defines DEF = new Defines();
+	
+	// sound related attributes - Melita Madhurza
+	private MediaPlayer flapSound;
+	private MediaPlayer hitSound;
+    private MediaPlayer pointSound;
+    private MediaPlayer whooshSound;
+    private MediaPlayer dieSound;
     
     // time related attributes
     private long clickTime, startTime, elapsedTime;   
@@ -108,6 +114,13 @@ public class AngryFlappyBird extends Application {
         primaryStage.setTitle(DEF.STAGE_TITLE);
         primaryStage.setResizable(false);
         primaryStage.show();
+        
+        // Load sounds - Melita Madhurza
+        flapSound = loadSound("flap.mp3");
+        hitSound = loadSound("hit.mp3");
+        pointSound = loadSound("point.mp3");
+        whooshSound = loadSound("whoosh.mp3");
+        dieSound = loadSound("die.mp3");
     }
     
 
@@ -123,6 +136,8 @@ public class AngryFlappyBird extends Application {
         gameControl = new VBox(20);
         gameControl.setPadding(new Insets(10,10,10,10));
         gameControl.getChildren().addAll(DEF.startButton, DEF.levelSelection, DEF.instruction);
+       
+
     }
     
     /**
@@ -133,7 +148,7 @@ public class AngryFlappyBird extends Application {
      */
     public void onLevelChange(ActionEvent event) {
         String selectedLevel = DEF.levelSelection.getValue(); // Get the selected value from ComboBox
-        if (!GAME_START) {
+        if (!GAME_START || GAME_OVER) {
             switch (selectedLevel) {
             case "Easy":
                 System.out.println("Easy level");
@@ -218,13 +233,14 @@ public class AngryFlappyBird extends Application {
         gameOverText.setStroke(Color.BLACK);
         gameOverText.setFill(Color.RED);
 
-        snoozeText = new Text(25, 95, ""); 
-        snoozeText.setFont(Font.font("Arial", FontWeight.BOLD, 40));
-        snoozeText.setFill(Color.RED);
+        snoozeText = new Text(25, 100, ""); 
+        snoozeText.setFont(Font.font("Arial", FontWeight.NORMAL, 40));
+        snoozeText.setFill(Color.YELLOW);
+        snoozeText.setStroke(Color.BLACK);
 
         scoreText = new Text(25, 60, "");
-        scoreText.setFont(Font.font("Arial", FontWeight.NORMAL, 50));
-        scoreText.setFill(Color.YELLOW);
+        scoreText.setFont(Font.font("Arial", FontWeight.BOLD, 60));
+        scoreText.setFill(Color.WHITE);
         scoreText.setStroke(Color.BLACK);
 
         livesText = new Text(210, 540, "");
@@ -284,6 +300,19 @@ public class AngryFlappyBird extends Application {
         }
         timer = new MyTimer();
         timer.start();
+    }
+    
+    /**
+    * Load audio files from the resources/audio directory
+    * @param fileName The name of the audio file to load
+    * @return MediaPlayer instance for the audio file
+    * @author Melita Madhurza
+    */
+    
+    private MediaPlayer loadSound(String fileName) {
+        String path = getClass().getResource("../resources/audio/" + fileName).toExternalForm();
+        Media sound = new Media(path);
+        return new MediaPlayer(sound);
     }
 
     /**
@@ -390,14 +419,14 @@ public class AngryFlappyBird extends Application {
             initializeCandies(lowerPipeWidthCandyPosX, lowerPipeWidthCandyPosY);
         }            
       
-       
         // initialize dragons from upper pipes
         double upperPipeWithDragonPosX = upperPipe.getPositionX();
         double upperPipeWithDragonPosY = upperPipe.getPositionY();
-
+//        
+//        if(upperPipeWithDragonPosX < DEF.SCENE_WIDTH && upperPipeWithDragonPosX > goose.getPositionX()) {
+//            initializeDragons(upperPipeWithDragonPosX, upperPipeWithDragonPosY);
+//        }
         initializeDragons(upperPipeWithDragonPosX, upperPipeWithDragonPosY);
-        
-
     }
     
     /**
@@ -476,6 +505,7 @@ public class AngryFlappyBird extends Application {
     	         lastBackgroundSwitchTime = now; // Update the last switch time
     	         if (GAME_START && !GAME_OVER) {
     	             switchBackground(); // Toggle the background
+    	             
     	         }
     	     }
 
@@ -545,8 +575,13 @@ public class AngryFlappyBird extends Application {
     	 }
     	 
     	 private void moveBlob() {
+    	    
     	     
     	    if (!isAutoPilot && !inBounceBackMode) {
+    	        if (GAME_START && !CLICKED) {
+                    flapSound.stop();
+                    flapSound.play();
+                }
     	        
     	        long diffTime = System.nanoTime() - clickTime;
                 
@@ -557,6 +592,7 @@ public class AngryFlappyBird extends Application {
                     imageIndex = Math.floorMod(imageIndex, DEF.GOOSE_IMG_LEN);
                     goose.setImage(DEF.IMAGE.get("goose"+String.valueOf(imageIndex)));
                     goose.setVelocity(0, DEF.GOOSE_FLY_VEL);
+                    
                 }
                 // blob drops after a period of time without button click
                 else if (CLICKED && diffTime > DEF.GOOSE_DROP_TIME) {
@@ -628,6 +664,7 @@ public class AngryFlappyBird extends Application {
           *  drop from above the scene height to below the floor
           */
          private void moveDragons() {
+             
              for (Dragon dragon: dragons) {
                  dragon.render(gc);
                  dragon.update(DEF.SCENE_SHIFT_TIME);
@@ -707,6 +744,8 @@ public class AngryFlappyBird extends Application {
              // Check collision: Goose - Floor 
              for (Floor floor: floors) {
                  if (goose.intersectsSprite(floor)) {
+                     dieSound.stop();
+                     dieSound.play();
                      if (!hasCollidedWithPipe && !inBounceBackMode) {
                          GAME_OVER = true;
                      }
@@ -720,6 +759,9 @@ public class AngryFlappyBird extends Application {
              // Keep track with the colission flags
              for (Dragon dragon: dragons) {
                  if (goose.intersectsSprite(dragon)) {
+                     whooshSound.stop();
+                     whooshSound.play();
+                     
                      bounceBack();
                      GAME_OVER = true;
                  }
@@ -732,6 +774,9 @@ public class AngryFlappyBird extends Application {
             
             for (Pipe pipe: pipes) {
                  if (goose.intersectsSprite(pipe) && !hasCollidedWithPipe) {
+                     // Play the hit sound - Melita Madhurza
+                     hitSound.stop();
+                     hitSound.play();
                      bounceBack();
 
                      // Mark that a collision has occurred
@@ -747,22 +792,19 @@ public class AngryFlappyBird extends Application {
                      }
                      
                  } 
-                 
-                 int currScorePipe = DEF.TOTAL_SCORES;
-                 // Check if the pipe has not been scored and the goose has passed it
-                 if (!pipe.isScored() && goose.getPositionX() > pipe.getPositionX() + pipe.getWidth()) {
+
+                 else if (!pipe.isScored() && goose.getPositionX() > pipe.getPositionX() + pipe.getWidth()) {
                      pipe.setScored(true); // Mark this pipe as scored
                      
                      if (candyCollectedInThisFrame) {
-                         int newScoreCandyInPipe = DEF.TOTAL_SCORES;
-                         System.out.println("CANDY IN FRAME SCORE CHANGE: " + Integer.toString(newScoreCandyInPipe - currScorePipe));
                          break;
                      }
                      // Increment score only if no candy collision
                      else {
                          DEF.TOTAL_SCORES ++;
-                         int newScorePipe = DEF.TOTAL_SCORES;
-                         System.out.println("CANDY NOT IN FRAME SCORE: " + Integer.toString(newScorePipe - currScorePipe)); //scoreChange = 1
+                         // Play the point sound - Melita Madhurza
+                         pointSound.stop();  // Stop any ongoing sound playback
+                         pointSound.play();  // Play the point sound
                      }
                  }
                  
@@ -777,7 +819,6 @@ public class AngryFlappyBird extends Application {
                          candyCollectedInThisFrame = true;
                          
                          if (candy.isRainbowCandy()) {
-                             double autoGoosePosY = candy.getPositionY();
                              System.out.println("BUMP INTO RAINBOW CANDY, ");
                              candies.remove(candy);
                              

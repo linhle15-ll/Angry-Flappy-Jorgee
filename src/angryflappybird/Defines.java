@@ -240,7 +240,7 @@ public class Defines {
 	public void hardLevel() {
 	    this.GOOSE_FLY_VEL = -50;
 	    this.PIPE_VEL= -0.8;
-	    this.PIPES_GAP = 190;
+	    this.PIPES_GAP = 200;
 	    this.MIN_NORMAL_CANDY_RATE = 0.6;
         this.MAX_NORMAL_CANDY_RATE = 0.8;
         this.MIN_RAINBOW_CANDY_RATE = 0.3;
