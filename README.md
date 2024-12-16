@@ -8,6 +8,11 @@
 ## Description
 This program implements the AngryFlappyJorge game, where a goose named Jorge navigates through obstacles. This game is inspired by the legendary goose, Jorge, adored by Mount Holyoke Community. It creates a joyful experience that connects players to Mount Holyoke's vibrant culture and environment. This game is built with Java and JavaFX. AngryFlappyJorge challenges players to score points, avoid collisions, and collect candies for bonus points.
 
+
+<p align="center">
+  <img src="src/resources/images/Screenshot.png" alt="Goose" width="500">
+</p>
+
 ## Code Structure
 The game consists of several files:
 
