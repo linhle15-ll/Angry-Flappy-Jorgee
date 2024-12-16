@@ -211,9 +211,9 @@ public class Defines {
 	    this.MAX_NORMAL_CANDY_RATE = 0.8;
 	    this.MIN_RAINBOW_CANDY_RATE = 0.1;
 	    this.MAX_RAINBOW_CANDY_RATE = 0.4;
-	    this.DRAGON_DROP_VEL = 0.05;
+	    this.DRAGON_DROP_VEL = 3;
 	    this.MIN_DRAGON_RATE = 0.3;
-	    this.MAX_DRAGON_RATE = 0.5;
+	    this.MAX_DRAGON_RATE = 0.7;
 	}
 	
 	/**
@@ -222,15 +222,15 @@ public class Defines {
 	 */
 	public void mediumLevel() {
 	    this.GOOSE_FLY_VEL = -45;
-	    this.PIPE_VEL= -0.8;
+	    this.PIPE_VEL= -0.7;
 	    this.PIPES_GAP = 190; 
 	    this.MIN_NORMAL_CANDY_RATE = 0.5;
         this.MAX_NORMAL_CANDY_RATE = 0.8;
         this.MIN_RAINBOW_CANDY_RATE = 0.2;
         this.MAX_RAINBOW_CANDY_RATE = 0.4;
-        this.DRAGON_DROP_VEL = 0.06;
+        this.DRAGON_DROP_VEL = 1;
         this.MIN_DRAGON_RATE = 0.3;
-        this.MAX_DRAGON_RATE = 0.6;
+        this.MAX_DRAGON_RATE = 0.8;
 	}
 	
 	/**
@@ -245,8 +245,8 @@ public class Defines {
         this.MAX_NORMAL_CANDY_RATE = 0.8;
         this.MIN_RAINBOW_CANDY_RATE = 0.3;
         this.MAX_RAINBOW_CANDY_RATE = 0.4;
-        this.DRAGON_DROP_VEL = 0.07;
+        this.DRAGON_DROP_VEL = 1;
         this.MIN_DRAGON_RATE = 0.3;
-        this.MAX_DRAGON_RATE = 0.6;
+        this.MAX_DRAGON_RATE = 0.9;
 	}
 }

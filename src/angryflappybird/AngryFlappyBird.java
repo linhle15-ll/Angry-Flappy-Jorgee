@@ -117,8 +117,8 @@ public class AngryFlappyBird extends Application {
         
         // Load sounds - Melita Madhurza
         flapSound = loadSound("flap.mp3");
-        hitSound = loadSound("hit.mp3");
         pointSound = loadSound("point.mp3");
+        hitSound = loadSound("hit.mp3");
         whooshSound = loadSound("whoosh.mp3");
         dieSound = loadSound("die.mp3");
     }
@@ -422,11 +422,9 @@ public class AngryFlappyBird extends Application {
         // initialize dragons from upper pipes
         double upperPipeWithDragonPosX = upperPipe.getPositionX();
         double upperPipeWithDragonPosY = upperPipe.getPositionY();
-//        
-//        if(upperPipeWithDragonPosX < DEF.SCENE_WIDTH && upperPipeWithDragonPosX > goose.getPositionX()) {
-//            initializeDragons(upperPipeWithDragonPosX, upperPipeWithDragonPosY);
-//        }
+        
         initializeDragons(upperPipeWithDragonPosX, upperPipeWithDragonPosY);
+
     }
     
     /**
@@ -468,23 +466,17 @@ public class AngryFlappyBird extends Application {
         if (DEF.MIN_DRAGON_RATE <= random && random <= DEF.MAX_DRAGON_RATE) { // Adjust drop rate
          // have to update the positions x and y
             Dragon dragon = new Dragon(
-                    upperPipeWithDragonPosX, 
-                    upperPipeWithDragonPosY - DEF.DRAGON_HEIGHT, // Offset to ensure it starts above the visible screen
+                    upperPipeWithDragonPosX * 1/2, 
+                    upperPipeWithDragonPosY,
                     DEF.IMAGE.get("dragon")
             );
-            
-            
-            dragon.setVelocity(0, DEF.DRAGON_DROP_VEL);
-            
-            System.out.println("Dragon is at X: " + dragon.getPositionX() + ", Y: " + dragon.getPositionY());
+
+            dragon.setVelocity(-DEF.DRAGON_DROP_VEL,DEF.DRAGON_DROP_VEL);
             
             dragon.setHeight(DEF.DRAGON_HEIGHT);
             dragon.setWidth(DEF.DRAGON_WIDTH);
             
             dragons.add(dragon);
-            
-            // Debugging output
-            System.out.println("Dragon initialized at X: " + dragon.getPositionX() + ", Y: " + dragon.getPositionY());
         }
     }
 
@@ -575,8 +567,6 @@ public class AngryFlappyBird extends Application {
     	 }
     	 
     	 private void moveBlob() {
-    	    
-    	     
     	    if (!isAutoPilot && !inBounceBackMode) {
     	        if (GAME_START && !CLICKED) {
                     flapSound.stop();
@@ -680,7 +670,6 @@ public class AngryFlappyBird extends Application {
           * @author Linh Ngoc Le
           */
          private void autoPilot() {
-             
              isAutoPilot = true; // Activate autopilot mode
              CLICKED = false;    // Disable manual control
              
