@@ -111,6 +111,4 @@ In the Arguments tab of the test files (stored in the "test" folder), in the VM 
 
 **Note**: Make sure that the JUnit library is imported to the project!
 
-## Acknowledgments
-Thank you Professor Melody Su for supporting us in the journey of making this game.
 
